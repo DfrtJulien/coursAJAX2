@@ -32,18 +32,13 @@ const cardContainer = document.querySelector('.cardContainer');
 btnSearch.addEventListener('click', () => {
   const movie = INPUT.value;
   cardContainer.innerHTML = ``;
-  console.log(seekMovie(movie));
+  seekMovie(movie);
 })
 
-
-const seekMovie = async (movie) =>
-{
+const showMore = async(movie) => {
   try {
-    const response = await fetch(`https://movies-api.julienpoirier-webdev.com/search/movies/${movie}`);
-
-  const data = await response.json();
-  console.log(data.results[0]);
-  for(let i = 0; i <= 10; i++){
+    const response = await fetch(`https://movies-api.julienpoirier-webdev.com/search/movies/${movie}/2`);
+    const data = await response.json();
     const note = data.results[i].vote_average;
     const roundNote = note.toFixed(1);
     cardContainer.innerHTML += `<div class=card>
@@ -60,9 +55,39 @@ const seekMovie = async (movie) =>
             </div>         
             </div>`;
 
-    if(i == 10){
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
+
+const seekMovie = async (movie) =>
+{
+  try {
+    const response = await fetch(`https://movies-api.julienpoirier-webdev.com/search/movies/${movie}`);
+
+  const data = await response.json();
+  console.log(data.results[0]);
+  for(let i = 0; i <= data.results.length; i++){
+    const note = data.results[i].vote_average;
+    const roundNote = note.toFixed(1);
+    cardContainer.innerHTML += `<div class=card>
+                                   <div class="img">
+              <img src="https://image.tmdb.org/t/p/w500${data.results[i].poster_path}" alt="affiche du film ${data.results[i].original_title}">
+            </div>
+            <div class="cardInfo">
+              <h2 class="title">${data.results[i].original_title}</h2>
+              <p class="overview">${data.results[i].overview}</p>
+              <div class="flex">
+                <p class="date">${data.results[i].release_date}</p>
+                <p class="note">${roundNote}/10</p>
+              </div>
+            </div>         
+            </div>`;
+
+    if(i == data.results.length -1){
       cardContainer.innerHTML += `
-            <button>Voir plus</button>`;
+            <button onclick=showMore()>Voir plus</button>`;
     }
     
   }
