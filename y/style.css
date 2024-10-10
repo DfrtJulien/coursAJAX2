@@ -13,6 +13,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -94,3 +99,47 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.card {
+  width: 300px;
+  border: 2px solid black;
+  margin-left: 50px;
+  padding: 0;
+  margin-top: 40px;
+}
+
+img {
+  width: 100%;
+}
+
+.title {
+  padding: 10px;
+  font-size: 30px;
+  color: gold;
+}
+
+.overview {
+  padding-left: 5px;
+}
+
+.flex {
+  display: flex;
+  margin-top: 15px;
+  justify-content: space-around;
+}
+
+.date, .note {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.note {
+  color: gold;
+}
+
