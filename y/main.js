@@ -23,22 +23,24 @@
 // console.log('test');
 
 // setupCounter(document.querySelector('#counter'))
-console.log('test');
+
 
 const btnSearch = document.querySelector('#seekMovie');
 const INPUT = document.querySelector('#movie');
 const cardContainer = document.querySelector('.cardContainer');
 
 btnSearch.addEventListener('click', () => {
-  const movie = INPUT.value;
+  const movieWanted = INPUT.value;
   cardContainer.innerHTML = ``;
-  seekMovie(movie);
+  seekMovie(movieWanted);
 })
 
 const showMore = async(movie) => {
   try {
+    cardContainer.innerHTML = "";
     const response = await fetch(`https://movies-api.julienpoirier-webdev.com/search/movies/${movie}/2`);
     const data = await response.json();
+    for(let i = 0; i <= data.results.length; i++){
     const note = data.results[i].vote_average;
     const roundNote = note.toFixed(1);
     cardContainer.innerHTML += `<div class=card>
@@ -47,7 +49,7 @@ const showMore = async(movie) => {
             </div>
             <div class="cardInfo">
               <h2 class="title">${data.results[i].original_title}</h2>
-              <p class="overview">${data.results[i].overview}</p>
+              <p class="overview">${data.results[i].overview.substring(0,100)}</p>
               <div class="flex">
                 <p class="date">${data.results[i].release_date}</p>
                 <p class="note">${roundNote}/10</p>
@@ -55,6 +57,18 @@ const showMore = async(movie) => {
             </div>         
             </div>`;
 
+            if(i == data.results.length - 1){
+              console.log("test2");
+              
+              const button = document.createElement('button');
+              button.innerText = 'Page précédente';
+              button.addEventListener('click', () => {
+                  seekMovie(movie);
+              });
+              cardContainer.appendChild(button);
+            }
+    }
+    
   } catch (error) {
     console.log(error);
     
@@ -64,10 +78,10 @@ const showMore = async(movie) => {
 const seekMovie = async (movie) =>
 {
   try {
+    cardContainer.innerHTML = "";
     const response = await fetch(`https://movies-api.julienpoirier-webdev.com/search/movies/${movie}`);
 
   const data = await response.json();
-  console.log(data.results[0]);
   for(let i = 0; i <= data.results.length; i++){
     const note = data.results[i].vote_average;
     const roundNote = note.toFixed(1);
@@ -77,7 +91,7 @@ const seekMovie = async (movie) =>
             </div>
             <div class="cardInfo">
               <h2 class="title">${data.results[i].original_title}</h2>
-              <p class="overview">${data.results[i].overview}</p>
+              <p class="overview">${data.results[i].overview.substring(0,100)}</p>
               <div class="flex">
                 <p class="date">${data.results[i].release_date}</p>
                 <p class="note">${roundNote}/10</p>
@@ -86,8 +100,12 @@ const seekMovie = async (movie) =>
             </div>`;
 
     if(i == data.results.length -1){
-      cardContainer.innerHTML += `
-            <button onclick=showMore()>Voir plus</button>`;
+      const button = document.createElement('button');
+      button.innerText = 'Page suivante';
+      button.addEventListener('click', () => {
+          showMore(movie);
+      });
+      cardContainer.appendChild(button);
     }
     
   }
